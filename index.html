@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlexiFile</title>
+
+  <!-- Remixicon & Font Awesome -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="style2.css"/>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation">
+    <div class="navbar-container">
+      <div class="Box-1">
+        <h2 class="navbar-logo">
+          <i class="fa-regular fa-file"></i> FlexiFile
+        </h2>
+      </div>
+      <div class="Box-2" style="display: flex; gap: 15px; align-items: center;">
+        <div class="home-btn" title="Home" style="cursor: pointer; font-size: 1.2rem;">
+            <a href="index.html" aria-label="Home" style="color: inherit; text-decoration: none;">
+                <i class="fa-solid fa-house"></i>
+            </a>
+        </div>
+        <div class="trash-btn" title="Trash" onclick="openTrashPanel()" style="cursor: pointer; font-size: 1.2rem; position: relative;">
+          <i class="fa-solid fa-trash-can"></i>
+          <span id="trashBadge" class="trash-badge" style="display: none; position: absolute; top: -8px; right: -10px; background: #e63946; color: white; font-size: 0.7rem; font-weight: bold; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">0</span>
+        </div>
+        <div class="theme-btn" title="Switch Theme" style="cursor: pointer;">
+          <i id="themeToggle" class="ri-moon-line" style="font-size: 1.2rem;"></i>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <div class="container">
+      <h1><i class="fa-solid fa-folder-open"></i> File Explorer</h1>
+
+      <!-- Modern Search Bar -->
+      <div class="search-wrapper">
+        <div class="search-bar">
+          <i class="fa-solid fa-search search-icon"></i>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search files or folders..."
+            aria-label="Search files or folders"
+            oninput="debouncedSearch()"
+            autocomplete="off"
+          />
+          <button id="searchClearBtn" onclick="clearSearch()" title="Clear" style="display:none;">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="search-filters" id="searchFilters">
+          <button class="filter-btn active" id="filter-all" onclick="setFilter('all')">All</button>
+          <button class="filter-btn" id="filter-file" onclick="setFilter('file')"><i class="fa fa-file"></i> Files</button>
+          <button class="filter-btn" id="filter-folder" onclick="setFilter('folder')"><i class="fa fa-folder"></i> Folders</button>
+        </div>
+        <div id="searchResultsPanel" class="search-results-panel" style="display:none;"></div>
+      </div>
+
+      <!-- Create Folder -->
+      <div class="action">
+        <input
+          id="folderPath"
+          type="text"
+          placeholder="📁 Enter folder name"
+          aria-label="Enter folder name"
+        />
+        <button onclick="createFolder()">
+          <i class="fa-solid fa-folder-plus"></i> Create Folder
+        </button>
+      </div>
+
+      <!-- Spell Check -->
+<div class="action">
+  <input
+    id="spellCheckPath"
+    type="text"
+    placeholder="✏️ Enter file path to check spelling"
+    aria-label="Enter file path to check spelling"
+  />
+  <button onclick="spellCheckFile()">
+    <i class="fa-solid fa-wand-magic-sparkles"></i> Spell Check
+  </button>
+</div>
+
+      <!-- Upload File -->
+      <div class="action">
+        <input
+          id="uploadPath"
+          type="text"
+          placeholder="📂 Folder path to upload"
+          aria-label="Folder path to upload"
+        />
+        <input id="fileInput" type="file" hidden />
+        <label for="fileInput" class="custom-file-btn">
+          <i class="fa-solid fa-file-upload"></i> Choose File
+        </label>
+        <button onclick="uploadFile()">
+          <i class="fa-solid fa-upload"></i> Upload
+        </button>
+      </div>
+
+      <!-- File List -->
+      <section class="file-section">
+        <h2><i class="fa-solid fa-database"></i> Files & Folders</h2>
+        <ul id="fileList" class="file-list">
+          <!-- Dynamically populated by script.js -->
+        </ul>
+      </section>
+    </div>
+  </main>
+
+  <!-- Footer (Empty or Minimal) -->
+  <footer class="footer">
+    <p id="contributors"></p>
+  </footer>
+
+  <!-- Theme Toggle Script -->
+  <script>
+    const themeToggle = document.getElementById("themeToggle");
+    const body = document.body;
+    const savedTheme = localStorage.getItem("theme");
+
+    function updateIcon() {
+      if (body.classList.contains("dark-theme")) {
+        themeToggle.classList.replace("ri-moon-line", "ri-sun-line");
+      } else {
+        themeToggle.classList.replace("ri-sun-line", "ri-moon-line");
+      }
+    }
+
+    if (savedTheme === "dark") {
+      body.classList.add("dark-theme");
+    } else {
+      body.classList.add("light-theme");
+    }
+
+    updateIcon();
+
+    themeToggle.addEventListener("click", () => {
+      if (body.classList.contains("light-theme")) {
+        body.classList.replace("light-theme", "dark-theme");
+        localStorage.setItem("theme", "dark");
+      } else {
+        body.classList.replace("dark-theme", "light-theme");
+        localStorage.setItem("theme", "light");
+      }
+      updateIcon();
+    });
+  </script>
+
+  <script src="script.js"></script>
+  <script src="script2.js"></script>
+</body>
+</html>

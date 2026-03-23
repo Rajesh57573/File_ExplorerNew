@@ -1,0 +1,195 @@
+/* ===== Improved file item layout ===== */
+.file-list {
+  list-style: none;
+  padding: 0;
+  margin: 10px 0;
+}
+
+/* allow wrapping so actions can drop below when needed */
+.file-item {
+  display: flex;
+  flex-wrap: wrap;          /* allow children to wrap to next line */
+  align-items: center;
+  gap: 8px;                 /* spacing between elements */
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  box-shadow: 0 0 10px rgba(118, 75, 162, 0.15);
+}
+
+/* Name area: allow it to grow and shrink, but don't force minimum width */
+.file-name {
+  flex: 1 1 auto;           /* grow, shrink, and take available width */
+  min-width: 0;             /* important to allow overflow handling in flexbox */
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #e3d9ff;
+  font-size: 1rem;
+
+  /* show truncated single-line name; if the name fills row, actions will wrap */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* When user hovers, show full name via native tooltip (title attribute) or allow wrapping */
+.file-item:hover .file-name {
+  /* optional: remove ellipsis on hover and allow wrapping for readability */
+  /* white-space: normal; */
+  /* text-overflow: clip; */
+}
+
+/* Actions block: keep it from shrinking; will move to next line if name consumes width */
+.file-actions {
+  display: flex;
+  gap: 8px;
+  flex: 0 0 auto;           /* do not shrink; preserves button size */
+  align-items: center;
+}
+
+/* If actions drop below (wrapped), align them to the left or right as you prefer.
+   Right-align when on new line: set width 100% and justify-content: flex-end */
+.file-actions.wrapped {
+  width: 100%;
+  justify-content: flex-end;
+  margin-top: 6px;
+}
+
+/* Buttons */
+.file-actions button {
+  border: none;
+  outline: none;
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 6px 10px;
+  color: #fff;
+  transition: 0.18s ease;
+}
+
+.edit-btn {
+  background: linear-gradient(135deg, #f39c12, #ffb74d);
+}
+.delete-btn {
+  background: linear-gradient(135deg, #ff4b2b, #ff416c);
+}
+
+/* Optional: ensure icon spacing */
+.file-name i {
+  width: 18px;
+  display: inline-block;
+}
+
+/* Scrollable file-section (keeps previous behavior) */
+.file-section {
+  max-height: 45vh;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.file-section::-webkit-scrollbar {
+  width: 8px;
+}
+.file-section::-webkit-scrollbar-thumb {
+  background: #6a4db8;
+  border-radius: 6px;
+}
+.file-section::-webkit-scrollbar-thumb:hover {
+  background: #b388ff;
+}
+
+/* --- Navbar Icon Section --- */
+.Box-2 {
+  display: flex;
+  align-items: center;
+  gap: 18px; /* proper space between icons */
+  margin-right: 25px;
+}
+
+/* Home Button (keeps the gradient rounded box) */
+.home-btn a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #7b5dc9, #b388ff);
+  color: #fff;
+  font-size: 1.3rem;
+  text-decoration: none;
+  box-shadow: 0 0 10px rgba(179, 136, 255, 0.3);
+  transition: all 0.3s ease;
+}
+
+.home-btn a:hover {
+  transform: translateY(-2px) scale(1.07);
+  box-shadow: 0 0 14px rgba(179, 136, 255, 0.6);
+  background: linear-gradient(135deg, #8f65e2, #c29fff);
+}
+
+/* Theme Toggle (icon only, no background box) */
+.theme-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  background: none;      /* removes background box */
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.theme-btn i {
+  font-size: 1.5rem;
+  color: #b388ff;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.theme-btn:hover i {
+  color: #d1b3ff;
+  transform: rotate(15deg) scale(1.2);
+}
+
+/* === Light & Dark Theme Button Adjustments === */
+
+/* Light Theme */
+body.light-theme .rename-btn {
+  background-color: #6a1b9a; /* violet shade */
+  color: #fff;
+}
+
+body.light-theme .rename-btn:hover {
+  background-color: #53167a;
+}
+
+body.light-theme .delete-btn {
+  background-color: #d32f2f; /* softer red */
+  color: #fff;
+}
+
+body.light-theme .delete-btn:hover {
+  background-color: #b71c1c;
+}
+
+/* Dark Theme */
+body.dark-theme .rename-btn {
+  background-color: #ffb300; /* golden-orange pop */
+  color: #1e1e2f;
+}
+
+body.dark-theme .rename-btn:hover {
+  background-color: #ffca28;
+}
+
+body.dark-theme .delete-btn {
+  background-color: #ff5252;
+  color: #1e1e2f;
+}
+
+body.dark-theme .delete-btn:hover {
+  background-color: #ff867c;
+}
